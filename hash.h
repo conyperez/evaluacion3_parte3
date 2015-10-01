@@ -8,7 +8,12 @@
 #define STDLIB_H
 #endif
 
-#define m 11;
+#ifndef CLAVE_H
+#include "clave.h"
+#define CLAVE_H
+#endif
+
+#define m 11
 
 typedef struct registro{
     Clave clave;
