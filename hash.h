@@ -22,3 +22,62 @@ typedef struct registro{
 
 Registro tabla[m];
 
+int inicializaRegistros(){
+    int i;
+    for(i=0; i<m; i++){
+        tabla[i].enUso = 0;     // 0 = no esta en uso;   1 = si esta en uso
+    }
+    return 1;
+}
+
+int estaEnUso(int j){
+    if(tabla[j].enUso == 1){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int hashDoble(Clave unaClave, int i){
+    int h1 = unaClave % m;
+    int h2 = 1 + (unaClave % (m-2));
+    int j = (h1 + (i * h2)) % m;
+
+    return j;
+}
+
+int insertarClave(Clave unaClave){    // Hash por Direccionamiento Abierto.
+    int i = 0;
+    while(i != m){
+        int j = hashDoble(unaClave, i);
+        if(!estaEnUso(j)){
+            tabla[j].clave = unaClave;
+            tabla[j].enUso = 1;
+            return j;
+        }else{
+            i++;
+        }
+    }
+    return -1;   // Error: tabla hash completa
+}
+
+int buscarClave(Clave unaClave){
+    int i = 0;
+    while(i != m){
+        int j = hashDoble(unaClave, i);
+        if((estaEnUso(j)) && (tabla[j].clave == unaClave)){
+            return j;
+        }
+        i++;
+    }
+    return -1;
+}
+
+int mostrarTabla(){
+    int i;
+    for(i=0; i<m; i++){
+        printf("Posicion = %d \nClave = %d\n\n", i, tabla[i].clave);
+    }
+}
+
+
