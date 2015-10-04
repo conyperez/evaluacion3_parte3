@@ -8,6 +8,11 @@
 #define STDLIB_H
 #endif
 
+#ifndef STRING_H
+#include <string.h>
+#define STRING_H
+#endif
+
 #ifndef CLAVE_H
 #include "clave.h"
 #define CLAVE_H
@@ -16,7 +21,7 @@
 #define m 11
 
 typedef struct registro{
-    Clave clave;
+    Codigo clave;
     int enUso;
 }Registro;
 
@@ -38,7 +43,22 @@ int estaEnUso(int j){
     }
 }
 
-int hashDoble(Clave unaClave, int i){
+Clave convertirClave(Codigo unCodigo){
+    int ASCII;
+    Clave clave = 0;
+    char caracter;
+    char *cadena = unCodigo;
+
+    while(*cadena != '\0'){
+        caracter = *cadena;
+        ASCII = caracter;
+        clave += ASCII;
+        cadena++;
+    }
+    return clave;
+}
+
+int hashDoble(int unaClave, int i){
     int h1 = unaClave % m;
     int h2 = 1 + (unaClave % (m-2));
     int j = (h1 + (i * h2)) % m;
@@ -46,12 +66,13 @@ int hashDoble(Clave unaClave, int i){
     return j;
 }
 
-int insertarClave(Clave unaClave){    // Hash por Direccionamiento Abierto.
+int insertarClave(Codigo unCodigo){    // Hash por Direccionamiento Abierto.
+    Clave unaClave = convertirClave(unCodigo);
     int i = 0;
     while(i != m){
         int j = hashDoble(unaClave, i);
         if(!estaEnUso(j)){
-            tabla[j].clave = unaClave;
+            tabla[j].clave = unCodigo;
             tabla[j].enUso = 1;
             return j;
         }else{
@@ -61,11 +82,12 @@ int insertarClave(Clave unaClave){    // Hash por Direccionamiento Abierto.
     return -1;   // Error: tabla hash completa
 }
 
-int buscarClave(Clave unaClave){
+int buscarClave(Codigo unCodigo){
+    Clave unaClave = convertirClave(unCodigo);
     int i = 0;
     while(i != m){
         int j = hashDoble(unaClave, i);
-        if((estaEnUso(j)) && (tabla[j].clave == unaClave)){
+        if((estaEnUso(j)) && (tabla[j].clave == unCodigo)){
             return j;
         }
         i++;
@@ -76,7 +98,7 @@ int buscarClave(Clave unaClave){
 int mostrarTabla(){
     int i;
     for(i=0; i<m; i++){
-        printf("Posicion = %d \nClave = %d\n\n", i, tabla[i].clave);
+        printf("Posicion = %d \nClave = %s\n\n", i, tabla[i].clave);
     }
 }
 
