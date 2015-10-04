@@ -8,4 +8,10 @@
 #define STDLIB_H
 #endif
 
+#ifndef STRING_H
+#include <string.h>
+#define STRING_H
+#endif
+
+typedef char *Codigo;
 typedef int Clave;
