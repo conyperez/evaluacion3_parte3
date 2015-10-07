@@ -43,7 +43,7 @@ int estaEnUso(int j){
     }
 }
 
-Clave convertirClave(Codigo unCodigo){
+Clave convertirClave(Codigo unCodigo){    // Convierte el Codigo a un int segun el valor del código ASCII
     int ASCII;
     Clave clave = 0;
     char caracter;
@@ -66,13 +66,14 @@ int hashDoble(int unaClave, int i){
     return j;
 }
 
-int insertarClave(Codigo unCodigo){    // Hash por Direccionamiento Abierto.
+int insertarClave(Codigo unCodigo){           // Hash por Direccionamiento Abierto.
     Clave unaClave = convertirClave(unCodigo);
     int i = 0;
     while(i != m){
         int j = hashDoble(unaClave, i);
         if(!estaEnUso(j)){
-            tabla[j].clave = unCodigo;
+            tabla[j].clave = (char*)malloc(strlen(unCodigo)*sizeof(char));
+            strcpy(tabla[j].clave, unCodigo);
             tabla[j].enUso = 1;
             return j;
         }else{
@@ -87,13 +88,29 @@ int buscarClave(Codigo unCodigo){
     int i = 0;
     while(i != m){
         int j = hashDoble(unaClave, i);
-        if((estaEnUso(j)) && (tabla[j].clave == unCodigo)){
+        if((estaEnUso(j)) && (strcmp(tabla[j].clave, unCodigo)==0)){
             return j;
         }
         i++;
     }
     return -1;
 }
+
+int leerArchivo(char *nombre){    
+    FILE *archivo = fopen(nombre, "r");
+    char *codigo;
+    while(!feof(archivo)){
+        char palabra[20];
+        fscanf(archivo,"%s", palabra);
+        codigo = (char*)malloc(strlen(palabra)*sizeof(char));
+        codigo = palabra;
+        insertarClave(codigo);
+    }
+    fclose(archivo);
+
+    return 1;
+}
+
 
 int mostrarTabla(){
     int i;
