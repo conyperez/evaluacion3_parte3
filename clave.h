@@ -13,5 +13,5 @@
 #define STRING_H
 #endif
 
-typedef char *Codigo;    // Código que se lee desde el archivo
-typedef int Clave;       // Guarda el código que se transforma en entero
+typedef char *Codigo;   // Codigo que se lee desde el archivo ("CLAVE CARRERA")
+typedef int Clave;   // Clave del código que se transformó a un int
